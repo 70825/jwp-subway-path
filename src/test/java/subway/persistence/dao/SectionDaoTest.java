@@ -7,20 +7,14 @@ import subway.persistence.entity.SectionEntity;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static subway.persistence.entity.SectionEntity.Builder;
 
 @SuppressWarnings("NonAsciiCharacters")
 class SectionDaoTest extends DaoTest {
 
+    private static final SectionEntity sectionEntity = SectionEntity.of(1L, 1L, 2L, 5);
+
     @Test
     void 역과_역의_관계를_저장한다() {
-        final SectionEntity sectionEntity = Builder
-                .builder()
-                .lineId(1L)
-                .upStationId(1L)
-                .downStationId(2L)
-                .distance(5)
-                .build();
 
         final SectionEntity actual = sectionDao.insert(sectionEntity);
 
@@ -35,13 +29,6 @@ class SectionDaoTest extends DaoTest {
 
     @Test
     void 모든_역과_역의_관계를_조회한다() {
-        final SectionEntity sectionEntity = Builder
-                .builder()
-                .lineId(1L)
-                .upStationId(1L)
-                .downStationId(2L)
-                .distance(5)
-                .build();
         sectionDao.insert(sectionEntity);
 
         final List<SectionEntity> actual = sectionDao.findAll();
@@ -58,13 +45,6 @@ class SectionDaoTest extends DaoTest {
 
     @Test
     void 역과_역의_관계_하나를_조회한다() {
-        final SectionEntity sectionEntity = Builder
-                .builder()
-                .lineId(1L)
-                .upStationId(1L)
-                .downStationId(2L)
-                .distance(5)
-                .build();
         final SectionEntity insertedSectionEntity = sectionDao.insert(sectionEntity);
 
         final SectionEntity actual = sectionDao.findById(insertedSectionEntity.getId());
@@ -80,13 +60,6 @@ class SectionDaoTest extends DaoTest {
 
     @Test
     void 역과_역의_관계_하나를_삭제한다() {
-        final SectionEntity sectionEntity = Builder
-                .builder()
-                .lineId(1L)
-                .upStationId(1L)
-                .downStationId(2L)
-                .distance(5)
-                .build();
         final SectionEntity insertedSectionEntity = sectionDao.insert(sectionEntity);
 
         final int actual = sectionDao.deleteById(insertedSectionEntity.getId());

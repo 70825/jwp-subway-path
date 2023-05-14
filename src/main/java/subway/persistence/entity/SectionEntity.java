@@ -1,5 +1,7 @@
 package subway.persistence.entity;
 
+import subway.domain.Distance;
+
 public class SectionEntity {
 
     private final Long id;
@@ -8,54 +10,20 @@ public class SectionEntity {
     private final Long downStationId;
     private final int distance;
 
-    private SectionEntity(final Builder builder) {
-        this.id = builder.id;
-        this.lineId = builder.lineId;
-        this.upStationId = builder.upStationId;
-        this.downStationId = builder.downStationId;
-        this.distance = builder.distance;
+    public SectionEntity(final Long id, final Long lineId, final Long upStationId, final Long downStationId, final int distance) {
+        this.id = id;
+        this.lineId = lineId;
+        this.upStationId = upStationId;
+        this.downStationId = downStationId;
+        this.distance = distance;
     }
 
-    public static class Builder {
+    public static SectionEntity of(final Long lineId, final Long upStationId, final Long downStationId, final int distance) {
+        return new SectionEntity(null, lineId, upStationId, downStationId, distance);
+    }
 
-        private Long id;
-        private Long lineId;
-        private Long upStationId;
-        private Long downStationId;
-        private int distance;
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder lineId(Long lineId) {
-            this.lineId = lineId;
-            return this;
-        }
-
-        public Builder upStationId(Long upStationId) {
-            this.upStationId = upStationId;
-            return this;
-        }
-
-        public Builder downStationId(Long downStationId) {
-            this.downStationId = downStationId;
-            return this;
-        }
-
-        public Builder distance(int distance) {
-            this.distance = distance;
-            return this;
-        }
-
-        public SectionEntity build() {
-            return new SectionEntity(this);
-        }
+    public static SectionEntity of(final Long id, final Long lineId, final Long upStationId, final Long downStationId, final int distance) {
+        return new SectionEntity(id, lineId, upStationId, downStationId, distance);
     }
 
     public boolean matchesDownStationId(Long stationId) {

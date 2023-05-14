@@ -10,7 +10,6 @@ import subway.domain.Station;
 import subway.persistence.dao.SectionDao;
 import subway.persistence.dao.StationDao;
 import subway.persistence.entity.SectionEntity;
-import subway.persistence.entity.SectionEntity.Builder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,12 +51,8 @@ public class SectionRepository {
                 continue;
             }
 
-            final SectionEntity sectionEntity = Builder.builder()
-                    .lineId(lineId)
-                    .upStationId(sourceStation.getId())
-                    .downStationId(targetStation.getId())
-                    .distance(pathInfo.getDistance().getDistance())
-                    .build();
+            final SectionEntity sectionEntity
+                    = SectionEntity.of(lineId, sourceStation.getId(), targetStation.getId(), pathInfo.getDistance().getDistance());
             sectionEntities.add(sectionEntity);
         }
         return sectionEntities;
