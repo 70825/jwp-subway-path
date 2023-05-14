@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class LineService {
+public class LineCommandService {
 
     private final LineRepository lineRepository;
     private final SectionRepository sectionRepository;
 
-    public LineService(final LineRepository lineRepository, final SectionRepository sectionRepository) {
+    public LineCommandService(final LineRepository lineRepository, final SectionRepository sectionRepository) {
         this.lineRepository = lineRepository;
         this.sectionRepository = sectionRepository;
     }

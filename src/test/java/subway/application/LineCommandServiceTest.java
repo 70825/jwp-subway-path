@@ -22,10 +22,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class LineServiceTest {
+class LineCommandServiceTest {
 
     @InjectMocks
-    LineService lineService;
+    LineCommandService lineCommandService;
+
+    @InjectMocks
+    LineQueryService lineQueryService;
 
     @Mock
     LineRepository lineRepository;
@@ -78,7 +81,7 @@ class LineServiceTest {
         doNothing().when(sectionRepository).findAllByLine(any());
 
         // when
-        final ReadLineResponse actual = lineService.findLineById(1L);
+        final ReadLineResponse actual = lineQueryService.findLineById(1L);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
