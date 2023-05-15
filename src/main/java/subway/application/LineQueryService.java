@@ -22,22 +22,15 @@ public class LineQueryService {
         this.sectionRepository = sectionRepository;
     }
 
-    public List<ReadLineResponse> findAllLine() {
-        final List<Line> persistLines = lineRepository.findAll();
+    public List<Line> findAllLine() {
+        final List<Line> lines = lineRepository.findAll();
 
-        for (Line persistLine : persistLines) {
-            sectionRepository.findAllByLine(persistLine);
-        }
-
-        return persistLines.stream()
-                .map(ReadLineResponse::of)
+        return lines.stream()
+                .map(sectionRepository::findAllSectionByLine)
                 .collect(Collectors.toList());
     }
 
-    public ReadLineResponse findLineById(final Long id) {
-        final Line line = lineRepository.findById(id);
-        sectionRepository.findAllByLine(line);
-
-        return ReadLineResponse.of(line);
+    public Line findLineById(final Long id) {
+        return lineRepository.findById(id);
     }
 }

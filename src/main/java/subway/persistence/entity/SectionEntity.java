@@ -1,6 +1,6 @@
 package subway.persistence.entity;
 
-import subway.domain.Distance;
+import subway.domain.section.Section;
 
 public class SectionEntity {
 
@@ -26,16 +26,14 @@ public class SectionEntity {
         return new SectionEntity(id, lineId, upStationId, downStationId, distance);
     }
 
-    public boolean matchesDownStationId(Long stationId) {
-        return downStationId.equals(stationId);
-    }
-
-    public boolean matchesUpStationId(Long stationId) {
-        return upStationId.equals(stationId);
-    }
-
-    public boolean matchesByUpAndDownStationId(Long upStationId, Long downStationId) {
-        return upStationId.equals(upStationId) && downStationId.equals(downStationId);
+    public static SectionEntity of(final Long lineId, final Section section) {
+        return new SectionEntity(
+                null,
+                lineId,
+                section.getUpStation().getId(),
+                section.getDownStation().getId(),
+                section.getDistance().getDistance()
+        );
     }
 
     public Long getId() {

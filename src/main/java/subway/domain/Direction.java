@@ -3,14 +3,9 @@ package subway.domain;
 public enum Direction {
 
     UP,
-    DOWN;
-
-    public Direction reverse() {
-        if (this == Direction.UP) {
-            return DOWN;
-        }
-        return UP;
-    }
+    DOWN,
+    MID,
+    NONE;
 
     public boolean matches(final Direction direction) {
         return this == direction;

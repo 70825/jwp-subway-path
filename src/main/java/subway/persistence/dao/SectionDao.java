@@ -17,14 +17,12 @@ public class SectionDao {
     private final SimpleJdbcInsert insertAction;
 
     private final RowMapper<SectionEntity> rowMapper = (rs, rowNum) ->
-            SectionEntity.Builder
-                    .builder()
-                    .id(rs.getLong("id"))
-                    .lineId(rs.getLong("line_id"))
-                    .upStationId(rs.getLong("up_station_id"))
-                    .downStationId(rs.getLong("down_station_id"))
-                    .distance(rs.getInt("distance"))
-                    .build();
+            SectionEntity.of(
+                    rs.getLong("id"),
+                    rs.getLong("line_id"),
+                    rs.getLong("up_station_id"),
+                    rs.getLong("down_station_id"),
+                    rs.getInt("distance"));
 
     public SectionDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -41,14 +39,13 @@ public class SectionDao {
                 .addValue("distance", sectionEntity.getDistance());
         final long sectionId = insertAction.executeAndReturnKey(insertParameters).longValue();
 
-        return SectionEntity.Builder
-                .builder()
-                .id(sectionId)
-                .lineId(sectionEntity.getLineId())
-                .upStationId(sectionEntity.getUpStationId())
-                .downStationId(sectionEntity.getDownStationId())
-                .distance(sectionEntity.getDistance())
-                .build();
+        return SectionEntity.of(
+                sectionId,
+                sectionEntity.getLineId(),
+                sectionEntity.getUpStationId(),
+                sectionEntity.getDownStationId(),
+                sectionEntity.getDistance()
+        );
     }
 
     public void insertAll(final List<SectionEntity> sectionEntities) {

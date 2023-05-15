@@ -8,10 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import subway.application.dto.CreationStationDto;
 import subway.domain.Station;
 import subway.persistence.repository.StationRepository;
-import subway.ui.dto.response.ReadStationResponse;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +33,7 @@ class StationServiceTest {
 
         when(stationRepository.insert(any())).thenReturn(station);
 
-        final CreationStationDto actual = stationService.saveStation("잠실역");
+        final Station actual = stationService.saveStation("잠실역");
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(actual.getId()).isEqualTo(station.getId());
@@ -48,7 +46,7 @@ class StationServiceTest {
         final Station station = Station.of(1L, "잠실역");
         when(stationRepository.findById(any())).thenReturn(station);
 
-        final ReadStationResponse actual = stationService.findStationById(1L);
+        final Station actual = stationService.findStationById(1L);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(actual.getId()).isEqualTo(station.getId());

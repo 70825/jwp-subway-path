@@ -1,8 +1,12 @@
 package subway.domain;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+import static subway.domain.Direction.DOWN;
+import static subway.domain.Direction.MID;
+import static subway.domain.Direction.NONE;
+import static subway.domain.Direction.UP;
 
 public class Station {
 
@@ -12,30 +16,22 @@ public class Station {
 
     private final Long id;
     private final String name;
-    private final AdjustPath adjustPath;
+    private Direction direction;
 
-    private Station(final Long id, final String name, final AdjustPath adjustPath) {
+    private Station(final Long id, final String name) {
         validate(name);
 
         this.id = id;
         this.name = name;
-        this.adjustPath = adjustPath;
+        this.direction = NONE;
     }
 
     public static Station from(final String name) {
-        return new Station(null, name, AdjustPath.create());
-    }
-
-    public static Station of(final String name) {
-        return new Station(null, name, AdjustPath.create());
+        return new Station(null, name);
     }
 
     public static Station of(final Long id, final String name) {
-        return new Station(id, name, AdjustPath.create());
-    }
-
-    public static Station of(final Station station) {
-        return new Station(station.id, station.name, AdjustPath.create());
+        return new Station(id, name);
     }
 
     private void validate(final String name) {
@@ -55,45 +51,24 @@ public class Station {
         }
     }
 
-    public void addPath(final Station station, final Distance distance, final Direction direction) {
-        adjustPath.add(station, distance, direction);
+    public void changeDirection(final Direction direction) {
+        this.direction = direction;
     }
 
-    public void deletePath(final Station station) {
-        adjustPath.delete(station);
+    public boolean isEndStation() {
+        return direction.matches(UP) || direction.matches(DOWN);
     }
 
-    public Distance findDistanceByStation(final Station target) {
-        return adjustPath.findPathInfoByStation(target)
-                .getDistance();
+    public boolean isMidStation() {
+        return direction.matches(MID);
     }
 
-    public List<Station> findAdjustStation() {
-        return adjustPath.findAllStation();
+    public boolean isUpStation() {
+        return direction.matches(UP);
     }
 
-    public AdjustPath getAdjustPath() {
-        return adjustPath;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isConnect(final Station newDownStation) {
-        return adjustPath.isConnect(newDownStation);
-    }
-
-    public Direction findEndStationPathDirection() {
-        return adjustPath.findEndStationPathDirection();
-    }
-
-    public boolean isEnd() {
-        return adjustPath.isEnd();
+    public boolean isDownStation() {
+        return direction.matches(DOWN);
     }
 
     @Override
@@ -107,5 +82,17 @@ public class Station {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }

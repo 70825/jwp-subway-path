@@ -16,7 +16,6 @@ import subway.ui.dto.response.ReadLineResponse;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,10 +77,10 @@ class LineCommandServiceTest {
         final Line line = Line.of(1L, "2호선", "bg-yellow-500");
         final ReadLineResponse response = ReadLineResponse.of(line);
         when(lineRepository.findById(any())).thenReturn(line);
-        doNothing().when(sectionRepository).findAllByLine(any());
+        when(sectionRepository.findAllSectionByLine(any())).thenReturn(line);
 
         // when
-        final ReadLineResponse actual = lineQueryService.findLineById(1L);
+        final Line actual = lineQueryService.findLineById(1L);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {

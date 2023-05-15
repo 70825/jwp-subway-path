@@ -2,55 +2,63 @@ package subway.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import subway.application.dto.CreationLineDto;
+import subway.domain.Distance;
 import subway.domain.Line;
+import subway.domain.Station;
+import subway.domain.section.Section;
 import subway.persistence.repository.LineRepository;
 import subway.persistence.repository.SectionRepository;
+import subway.persistence.repository.StationRepository;
 import subway.ui.dto.request.CreationLineRequest;
-import subway.ui.dto.response.ReadLineResponse;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Transactional
 @Service
+@Transactional
 public class LineCommandService {
 
     private final LineRepository lineRepository;
+    private final StationRepository stationRepository;
     private final SectionRepository sectionRepository;
 
-    public LineCommandService(final LineRepository lineRepository, final SectionRepository sectionRepository) {
+    public LineCommandService(final LineRepository lineRepository,
+                              final StationRepository stationRepository,
+                              final SectionRepository sectionRepository) {
         this.lineRepository = lineRepository;
+        this.stationRepository = stationRepository;
         this.sectionRepository = sectionRepository;
     }
 
-    public CreationLineDto saveLine(final CreationLineRequest request) {
+    public Line saveLine(final CreationLineRequest request) {
         final Line line = Line.of(request.getName(), request.getColor());
-        final Line persistLine = lineRepository.insert(line);
 
-        return CreationLineDto.from(persistLine);
+        return lineRepository.insert(line);
     }
 
-    public List<ReadLineResponse> findAllLine() {
-        final List<Line> persistLines = lineRepository.findAll();
-
-        for (Line persistLine : persistLines) {
-            sectionRepository.findAllByLine(persistLine);
-        }
-
-        return persistLines.stream()
-                .map(ReadLineResponse::of)
-                .collect(Collectors.toList());
-    }
-
-    public ReadLineResponse findLineById(final Long id) {
+    public Line findLineById(final Long id) {
         final Line line = lineRepository.findById(id);
-        sectionRepository.findAllByLine(line);
-
-        return ReadLineResponse.of(line);
+        return sectionRepository.findAllSectionByLine(line);
     }
 
     public void deleteLineById(final Long id) {
         lineRepository.deleteById(id);
+    }
+
+    public void saveSection(final Long lineId,
+                            final Long upStationId,
+                            final Long downStationId,
+                            final int distance) {
+        final Line line = lineRepository.findById(lineId);
+        final Station upStation = stationRepository.findById(upStationId);
+        final Station downStation = stationRepository.findById(downStationId);
+        final Section section = Section.of(upStation, downStation, Distance.from(distance));
+
+        final Line newLine = sectionRepository.findAllSectionByLine(line);
+        newLine.addSection(section);
+        sectionRepository.insert(newLine);
+    }
+
+    public void deleteSection(final Long lineId, final Long stationId) {
+        final Line line = findLineById(lineId);
+        final Station station = stationRepository.findById(stationId);
+        line.deleteStation(station);
     }
 }
